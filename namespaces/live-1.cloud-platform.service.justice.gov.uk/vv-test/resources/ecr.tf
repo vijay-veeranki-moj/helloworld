@@ -15,7 +15,7 @@ module "vv-ecr-cred-new" {
 resource "kubernetes_secret" "vv-ecr-cred-new" {
   metadata {
     name      = "ecr-repo-vv-myapp-new"
-    namespace = "vv-myapp-dev"
+    namespace = "vv-test"
   }
 
   data {
