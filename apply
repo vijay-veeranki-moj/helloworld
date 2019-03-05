@@ -32,8 +32,8 @@ for _c in namespaces/*; do
           -backend-config="bucket=cloud-platform-terraform-state" \
           -backend-config="key=cloud-platform-environment/${cluster}/${namespace}/terraform.tfstate" \
           -backend-config="region=eu-west-1"
-        terraform plan \
-          # -auto-approve \
+        terraform apply \
+           -auto-approve \
           # -var="cluster_name=${cluster}" \
           # -var="cluster_state_bucket=cloud-platform-terraform-state"
         cd $OLDPWD
