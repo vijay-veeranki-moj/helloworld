@@ -30,7 +30,7 @@ for _c in namespaces/*; do
         log blue "applying terraform resources for namespace ${namespace} in ${cluster}"
         terraform init \
           -backend-config="bucket=cloud-platform-terraform-state" \
-          -backend-config="key=cloud-platform-environment-live1/${cluster}/${namespace}/terraform.tfstate" \
+          -backend-config="key=cloud-platform-environment/${cluster}/${namespace}/terraform.tfstate" \
           -backend-config="region=eu-west-1"
         terraform plan \
           # -auto-approve \
