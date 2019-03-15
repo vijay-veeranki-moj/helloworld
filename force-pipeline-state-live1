@@ -63,10 +63,7 @@ echo "setting roles for moj team"
 
 
 
-spawn "fly -t live-1 set-team -n moj -c ./roles.yml"
-expect "apply configuration? [yN]"
-send "y\r"
-# expect eof
+ echo y | xargs -p fly -t live-1 set-team -n moj -c ./roles.yml
 
   
 
