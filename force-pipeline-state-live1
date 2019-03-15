@@ -65,7 +65,7 @@ echo "setting roles for moj team"
 
 
 
-fly -n \
+fly \
   -t live-1 \
   set-team \
   -n moj \
