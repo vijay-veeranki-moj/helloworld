@@ -44,8 +44,6 @@ curl -Lso /tmp/fly-5.0.0-linux-amd64.tgz https://github.com/concourse/concourse/
 tar -xvf /tmp/fly-5.0.0-linux-amd64.tgz -C /usr/local/bin
 chmod +x /usr/local/bin/fly
 
-fly targets > targets
-cat targets
 
 fly \
   -t live-1 \
@@ -60,17 +58,18 @@ fly \
 
 fly -t live-1 pipelines -a | awk '{ print $1; }' | sort > live-1_pipelines
 
-# echo "setting roles for moj team"
+
+echo "setting roles for moj team"
 
 
 
-# fly \
-#   -t live-1 \
-#   set-team \
-#   -n moj \
-#   -c ./roles.yml
+fly \
+  -t live-1 \
+  set-team \
+  -n moj \
+  -c ./roles.yml < echo 'y'
 
-#   echo y
+
   
 
 _team_path="pipelines/${CONCOURSE_CLUSTER}/${CONCOURSE_TEAM}"
@@ -100,7 +99,7 @@ for i in $(cat git_pipelines); do
     fly \
       -t live-1 \
       set-pipeline \
-      -n \
+      -n moj \
       -p "${i}" \
       -c "${_team_path}/${i}.yaml"
     fly \
