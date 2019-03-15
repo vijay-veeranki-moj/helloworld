@@ -40,10 +40,10 @@ apk add \
   --no-progress \
   curl
 
-curl -Lso /usr/local/bin/fly https://github.com/concourse/concourse/releases/download/v4.2.3/fly_linux_amd64
+curl -s https://github.com/concourse/concourse/releases/download/v5.0.0/fly-5.0.0-linux-amd64.tgz | tar -xvf -C /usr/local/bin
 chmod +x /usr/local/bin/fly
 
-
+curl -s http://example.com/file.tgz | tar xvf - -C dest/
 
 fly targets > targets
 cat targets
