@@ -40,7 +40,7 @@ apk add \
   --no-progress \
   curl
 
-curl -Lso /usr/local/bin/fly https://github.com/concourse/concourse/releases/download/${CONCOURSE_FLY_VERSION}/fly-5.0.0-linux-amd64.tgz
+curl -Lso /usr/local/bin/fly https://github.com/concourse/concourse/releases/download/${CONCOURSE_FLY_VERSION}/fly-5.0.0-linux-amd64.tgz | tar -xz
 chmod +x /usr/local/bin/fly
 
 fly \
