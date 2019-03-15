@@ -59,7 +59,7 @@ echo "setting roles for moj team"
 
 echo "Moj team created with roles"
 
-fly -t current pipelines -a | awk '{ print $1; }' | sort > current_pipelines
+fly -t current pipelines -a | grep live1 | awk '{ print $1; }' | sort > current_pipelines
 
 cat current_pipelines
 
