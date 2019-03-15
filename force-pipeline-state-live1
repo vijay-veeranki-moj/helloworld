@@ -63,7 +63,7 @@ echo "setting roles for moj team"
 
 
 
- echo y | xargs -p fly -t live-1 set-team -n moj -c ./roles.yml
+echo y | xargs -p fly -t live-1 set-team -n moj -c ./roles.yml
 
   
 
