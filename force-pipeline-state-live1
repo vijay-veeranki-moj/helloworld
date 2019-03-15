@@ -43,10 +43,10 @@ apk add \
 curl -Lso /usr/local/bin/fly https://github.com/concourse/concourse/releases/download/v4.2.3/fly_linux_amd64
 chmod +x /usr/local/bin/fly
 
-fly -t current sync
+fly -t live-1 sync
 
 fly \
-  -t current \
+  -t live-1 \
   login \
   -k \
   -c ${CONCOURSE_URL} \
@@ -54,12 +54,12 @@ fly \
   -u ${CONCOURSE_BASIC_AUTH_USERNAME} \
   -p ${CONCOURSE_BASIC_AUTH_PASSWORD}
 
-fly -t current pipelines -a | awk '{ print $1; }' | sort > current_pipelines
+fly -t live-1 pipelines -a | awk '{ print $1; }' | sort > live-1_pipelines
 
 echo "setting roles for main team"
 
 fly \
-  -t current \
+  -t live-1 \
   set-team \
   -n moj \
   -c ./roles.yml
@@ -69,12 +69,12 @@ _team_path="pipelines/${CONCOURSE_CLUSTER}/${CONCOURSE_TEAM}"
 
 find "${_team_path}" -iname '*.yaml' -exec basename {} \; | cut -d'.' -f1 | sort > git_pipelines
 
-# for i in $(comm -23 current_pipelines git_pipelines); do
+# for i in $(comm -23 live-1_pipelines git_pipelines); do
 #   echo ">>> deleting pipeline '${i}'"
 #   (
 #     set -x
 #     fly \
-#       -t current \
+#       -t live-1 \
 #       destroy-pipeline \
 #       -n \
 #       -p "${i}"
@@ -90,13 +90,13 @@ for i in $(cat git_pipelines); do
   (
     set -x
     fly \
-      -t current \
+      -t live-1 \
       set-pipeline \
       -n \
       -p "${i}" \
       -c "${_team_path}/${i}.yaml"
     fly \
-      -t current \
+      -t live-1 \
       unpause-pipeline \
       -p "${i}"
   )
