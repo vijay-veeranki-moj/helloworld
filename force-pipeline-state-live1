@@ -64,6 +64,8 @@ yes | fly -t live-1 set-team -n moj -c ./roles.yml
 # /usr/bin/expect -c 'expect "\n" { expect "apply configuration [yN]" }'
 # send "y\r"  
 
+echo "teams completed updted blblb"
+
 _team_path="pipelines/${CONCOURSE_CLUSTER}/${CONCOURSE_TEAM}"
 
 find "${_team_path}" -iname '*.yaml' -exec basename {} \; | cut -d'.' -f1 | sort > git_pipelines
@@ -91,7 +93,7 @@ for i in $(cat git_pipelines); do
     fly \
       -t live-1 \
       set-pipeline \
-      -n moj \
+      -n \
       -p "${i}" \
       -c "${_team_path}/${i}.yaml"
     fly \
