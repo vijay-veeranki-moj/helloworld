@@ -61,9 +61,9 @@ fly \
 
 fly -t live-1 pipelines -a | awk '{ print $1; }' | sort > live-1_pipelines
 
-echo "setting roles for main team"
+echo "setting roles for moj team"
 
-fly \
+fly -y \
   -t live-1 \
   set-team \
   -n moj \
