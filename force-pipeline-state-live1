@@ -45,7 +45,7 @@ tar -xvf /tmp/fly-5.0.0-linux-amd64.tgz -C /usr/local/bin
 chmod +x /usr/local/bin/fly
 
 fly \
-  -t live-1 \
+  -t current \
   login \
   -k \
   -c ${CONCOURSE_URL} \
@@ -55,13 +55,13 @@ fly \
 
 echo "setting roles for moj team"
 
-fly -t live-1 set-team --team-name moj --non-interactive -c ./roles.yml
+# fly -t current set-team --team-name moj --non-interactive -c ./roles.yml
 
 echo "Moj team created with roles"
 
-fly -t live-1 pipelines -a | awk '{ print $1; }' | sort > live-1_pipelines
+fly -t current pipelines -a | awk '{ print $1; }' | sort > current_pipelines
 
-cat live-1_pipelines
+cat current_pipelines
 
 _team_path="pipelines/${CONCOURSE_CLUSTER}/${CONCOURSE_TEAM}"
 
@@ -69,12 +69,12 @@ find "${_team_path}" -iname '*.yaml' -exec basename {} \; | cut -d'.' -f1 | sort
 
 cat git_pipelines
 
-for i in $(comm -23 live-1_pipelines git_pipelines); do
+for i in $(comm -23 current_pipelines git_pipelines); do
   echo ">>> deleting pipeline '${i}'"
   # (
   #   set -x
   #   fly \
-  #     -t live-1 \
+  #     -t current \
   #     destroy-pipeline \
   #     -n \
   #     -p "${i}"
@@ -90,13 +90,13 @@ for i in $(cat git_pipelines); do
   (
     set -x
     fly \
-      -t live-1 \
+      -t current \
       set-pipeline \
       -n \
       -p "${i}" \
       -c "${_team_path}/${i}.yaml"
     fly \
-      -t live-1 \
+      -t current \
       unpause-pipeline \
       -p "${i}"
   )
