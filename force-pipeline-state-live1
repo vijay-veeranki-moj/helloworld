@@ -69,19 +69,19 @@ find "${_team_path}" -iname '*.yaml' -exec basename {} \; | cut -d'.' -f1 | sort
 
 cat git_pipelines
 
-# for i in $(comm -23 live-1_pipelines git_pipelines); do
-#   echo ">>> deleting pipeline '${i}'"
-#   (
-#     set -x
-#     fly \
-#       -t live-1 \
-#       destroy-pipeline \
-#       -n \
-#       -p "${i}"
-#   )
+for i in $(comm -23 live-1_pipelines git_pipelines); do
+  echo ">>> deleting pipeline '${i}'"
+  # (
+  #   set -x
+  #   fly \
+  #     -t live-1 \
+  #     destroy-pipeline \
+  #     -n \
+  #     -p "${i}"
+  # )
 
-#   _tf destroy "${_team_path}/${i}"
-# done
+  # _tf destroy "${_team_path}/${i}"
+done
 
 for i in $(cat git_pipelines); do
   _tf apply "${_team_path}/${i}"
