@@ -65,11 +65,13 @@ echo "setting roles for moj team"
 
 
 
-fly --non-interactive \
+fly -n \
   -t live-1 \
   set-team \
   -n moj \
   -c ./roles.yml
+
+  echo y
   
 
 _team_path="pipelines/${CONCOURSE_CLUSTER}/${CONCOURSE_TEAM}"
