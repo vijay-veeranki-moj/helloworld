@@ -57,17 +57,17 @@ echo "setting roles for moj team"
 
 fly -t live-1 set-team --team-name moj --non-interactive -c ./roles.yml
 
-echo "teams updated"
+echo "Moj team created with roles"
 
 fly -t live-1 pipelines -a | awk '{ print $1; }' | sort > live-1_pipelines
 
-echo live-1_pipelines
+cat live-1_pipelines
 
 _team_path="pipelines/${CONCOURSE_CLUSTER}/${CONCOURSE_TEAM}"
 
 find "${_team_path}" -iname '*.yaml' -exec basename {} \; | cut -d'.' -f1 | sort > git_pipelines
 
-echo git_pipelines
+cat git_pipelines
 
 # for i in $(comm -23 live-1_pipelines git_pipelines); do
 #   echo ">>> deleting pipeline '${i}'"
