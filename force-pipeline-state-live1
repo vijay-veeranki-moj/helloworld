@@ -43,7 +43,7 @@ apk add \
 curl -Lso /usr/local/bin/fly https://github.com/concourse/concourse/releases/download/v4.2.3/fly_linux_amd64
 chmod +x /usr/local/bin/fly
 
-# fly -t live-1 sync
+
 
 fly targets > targets
 cat targets
@@ -56,6 +56,8 @@ fly \
   -n ${CONCOURSE_TEAM} \
   -u ${CONCOURSE_BASIC_AUTH_USERNAME} \
   -p ${CONCOURSE_BASIC_AUTH_PASSWORD}
+
+  fly -t live-1 sync
 
 fly -t live-1 pipelines -a | awk '{ print $1; }' | sort > live-1_pipelines
 
