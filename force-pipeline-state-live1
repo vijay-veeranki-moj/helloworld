@@ -60,7 +60,7 @@ fly -t live-1 pipelines -a | awk '{ print $1; }' | sort > live-1_pipelines
 
 echo "setting roles for moj team"
 
-yes | fly -t live-1 set-team --team-name moj --non-interactive -c ./roles.yml
+fly -t live-1 set-team --team-name moj --non-interactive -c ./roles.yml
 # /usr/bin/expect -c 'expect "\n" { expect "apply configuration [yN]" }'
 # send "y\r"  
 
