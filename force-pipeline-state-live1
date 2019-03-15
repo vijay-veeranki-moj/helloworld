@@ -45,6 +45,9 @@ chmod +x /usr/local/bin/fly
 
 fly -t live-1 sync
 
+fly targets > targets
+cat targets
+
 fly \
   -t live-1 \
   login \
