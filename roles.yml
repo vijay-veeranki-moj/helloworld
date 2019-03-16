@@ -1,7 +1,10 @@
 roles:
 - name: owner
+  local:
+    users: ["${user_owner}"]
+- name: member
   github:
-    teams: [ "ministryofjustice:webops" ]
+    teams: ["${CONCOURSE_GITHUB_TEAMS}"]
 - name: viewer
   github:
-    orgs: [ "ministryofjustice" ]
+    orgs: ["${CONCOURSE_GITHUB_ORG}"]
