@@ -33,12 +33,10 @@ jobs:
           params:
             AWS_ACCESS_KEY_ID: ((aws-live1.access-key-id))
             AWS_SECRET_ACCESS_KEY: ((aws-live1.secret-access-key))
-            CONCOURSE_FLY_VERSION: v5.0.0
+            CONCOURSE_FLY_VERSION: 5.0.0
             CONCOURSE_URL: 'http://concourse-web.concourse.svc.cluster.local:8080'
             CONCOURSE_TEAM: main
             CONCOURSE_CLUSTER: cloud-platform-live-1
-            CONCOURSE_GITHUB_ORG: ministryofjustice
-            CONCOURSE_GITHUB_TEAMS: ministryofjustice:webops
             CONCOURSE_BASIC_AUTH_USERNAME: ((concourse-basic-auth.username))
             CONCOURSE_BASIC_AUTH_PASSWORD: ((concourse-basic-auth.password))
             TF_PLUGIN_CACHE_DIR: /tmp/terraform-plugin-cache"
