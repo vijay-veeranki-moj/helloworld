@@ -63,7 +63,7 @@ roles:
     users: [ "${CONCOURSE_BASIC_AUTH_USERNAME}" ]
 - name: member
   github:
-    teams: [ "${CONCOURSE_GITHUB_TEAMS}" ]
+    teams: [ "ministryofjustice:webops" ]
 - name: viewer
   github:
     orgs: [ "${CONCOURSE_GITHUB_ORG}" ]
