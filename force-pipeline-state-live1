@@ -58,7 +58,7 @@ echo "setting roles for moj team"
 fly \
 -t current \
 set-team \
---team-name moj 
+--team-name moj \
 --non-interactive \
 --role member --github-team ${CONCOURSE_GITHUB_ORG}
 
