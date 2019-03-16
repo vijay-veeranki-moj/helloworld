@@ -1,10 +1,10 @@
 roles:
 - name: owner
   local:
-    users: ["${CONCOURSE_BASIC_AUTH_USERNAME}"]
+    users: ["${user}"]
 - name: member
   github:
-    teams: ["${CONCOURSE_GITHUB_TEAMS}"]
+    teams: ${CONCOURSE_GITHUB_TEAMS}
 - name: viewer
   github:
-    orgs: ["${CONCOURSE_GITHUB_ORG}"]
+    orgs: ${CONCOURSE_GITHUB_ORG}
