@@ -71,7 +71,9 @@ find "${_team_path}" -iname '*.yaml' -exec basename {} \; | cut -d'.' -f1 | sort
 
 find "${_new_team_path}" -iname '*.yaml' -exec basename {} \; | cut -d'.' -f1 | sort > team_pipelines
 
-cat git_pipelines
+cat  main_pipelines\n
+
+cat  team_pipelines\n
 
 for i in $(comm -23 current_pipelines main_pipelines); do
   echo ">>> deleting pipeline '${i}'"
