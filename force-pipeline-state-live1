@@ -55,7 +55,7 @@ fly \
 
 echo "setting roles for moj team"
 
-# fly -t current set-team --team-name moj --non-interactive \
+fly -t current set-team --team-name moj --non-interactive \
 -c "roles.yml" = <<ROLES
 roles: 
 - name: owner
