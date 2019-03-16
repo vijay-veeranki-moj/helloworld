@@ -55,7 +55,19 @@ fly \
 
 echo "setting roles for moj team"
 
-# fly -t current set-team --team-name moj --non-interactive -c ./roles.yml
+# fly -t current set-team --team-name moj --non-interactive \
+-c "roles.yml" = <<ROLES
+roles: 
+- name: owner
+  local:
+    users: [ "${CONCOURSE_BASIC_AUTH_USERNAME}" ]
+- name: member
+  github:
+    teams: [ "${CONCOURSE_GITHUB_TEAMS}" ]
+- name: viewer
+  github:
+    orgs: [ "${CONCOURSE_GITHUB_ORG}" ]
+ROLES
 
 echo "Moj team created with roles"
 
