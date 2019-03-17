@@ -167,17 +167,17 @@ for i in $(cat team_pipelines); do
   _tf apply "${_new_team_path}/${i}"
 
   echo ">>> setting pipeline '${i}'"
-  # (
-  #   set -x
-  #   fly \
-  #     -t current \
-  #     set-pipeline \
-  #     -n \
-  #     -p "${i}" \
-  #     -c "${_new_team_path}/${i}.yaml"
-  #   fly \
-  #     -t current \
-  #     unpause-pipeline \
-  #     -p "${i}"
-  # )
+  (
+    set -x
+    fly \
+      -t current \
+      set-pipeline \
+      -n \
+      -p "${i}" \
+      -c "${_new_team_path}/${i}.yaml"
+    fly \
+      -t current \
+      unpause-pipeline \
+      -p "${i}"
+  )
 done
