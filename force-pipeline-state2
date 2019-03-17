@@ -132,7 +132,7 @@ fly \
   -u ${CONCOURSE_BASIC_AUTH_USERNAME} \
   -p ${CONCOURSE_BASIC_AUTH_PASSWORD}
 
-fly -t current pipelines -a | grep '^live0.*environments' | awk '{ print $1; }' | sort > moj_pipelines
+fly -t current pipelines -a | grep '^live1.*environments' | awk '{ print $1; }' | sort > moj_pipelines
 
 echo "moj pipeline"
 cat moj_pipelines

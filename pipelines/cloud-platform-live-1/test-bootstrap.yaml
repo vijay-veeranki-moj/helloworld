@@ -38,7 +38,7 @@ jobs:
             CONCOURSE_TEAM: main
             CONCOURSE_GITHUB_ORG: ministryofjustice
             CONCOURSE_GITHUB_TEAMS: ministryofjustice:webops
-            CONCOURSE_CLUSTER: cloud-platform-live-0
+            CONCOURSE_CLUSTER: cloud-platform-live-1
             CONCOURSE_BASIC_AUTH_USERNAME: ((concourse-basic-auth.username))
             CONCOURSE_BASIC_AUTH_PASSWORD: ((concourse-basic-auth.password))
             TF_PLUGIN_CACHE_DIR: /tmp/terraform-plugin-cache"
@@ -51,4 +51,4 @@ jobs:
               - -c
               - |
                 mkdir -p "${TF_PLUGIN_CACHE_DIR}"
-                ./force-pipeline-state-live2
+                ./force-pipeline-state2
