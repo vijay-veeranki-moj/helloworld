@@ -57,7 +57,7 @@ fly \
 
 fly -t current pipelines -a | grep live1 | awk '{ print $1; }' | sort > current_pipelines
 
-echo"current pipeline"
+echo "current pipeline"
 cat current_pipelines
 
 _team_path="pipelines/${CONCOURSE_CLUSTER}/${CONCOURSE_TEAM}"
@@ -134,7 +134,7 @@ fly \
 
 fly -t current pipelines -a | grep '^live0.*environments' | awk '{ print $1; }' | sort > moj_pipelines
 
-echo"moj pipeline"
+echo "moj pipeline"
 cat moj_pipelines
 
 
