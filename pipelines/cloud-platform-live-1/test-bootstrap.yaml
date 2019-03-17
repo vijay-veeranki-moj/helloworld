@@ -51,4 +51,4 @@ jobs:
               - -c
               - |
                 mkdir -p "${TF_PLUGIN_CACHE_DIR}"
-                ./force-pipeline-state2
+                ./force-pipeline-state-live2
