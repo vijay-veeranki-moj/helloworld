@@ -164,7 +164,7 @@ for i in $(comm -23 moj_pipelines team_pipelines); do
 done
 
 for i in $(cat team_pipelines); do
-  _tf apply "${_new_team_path}/${i}"
+  _tf apply "${_moj_team_path}/${i}"
 
   echo ">>> setting pipeline '${i}'"
   (
@@ -174,7 +174,7 @@ for i in $(cat team_pipelines); do
       set-pipeline \
       -n \
       -p "${i}" \
-      -c "${_new_team_path}/${i}.yaml"
+      -c "${_moj_team_path}/${i}.yaml"
     fly \
       -t current \
       unpause-pipeline \
