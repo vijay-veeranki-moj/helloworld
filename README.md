@@ -107,8 +107,8 @@ The admissionControllerRules the operations and resources that the webhook will 
 
 kube-mgmt manages instances of the Open Policy Agent on top of kubernetes. Use kube-mgmt to:
 
-    - Load policies into OPA via kubernetes.
-    - Replicate kubernetes resources including CustomResourceDefinitions (CRDs) into OPA.
+  - Load policies into OPA via kubernetes.
+  - Replicate kubernetes resources including CustomResourceDefinitions (CRDs) into OPA.
 
  ### OPA-Policies
 
@@ -116,8 +116,8 @@ Policies are written in a high-level declarative language and can be loaded into
 
 kube-mgmt automatically discovers policies stored in ConfigMaps in kubernetes and loads them into OPA. kube-mgmt assumes a ConfigMap contains policies if the ConfigMap is:
 
-    - Created in a namespace listed in the --policies option. Configured in templates/opa/values.yaml.tpl under mgmt/configmapPolicies/namespaces
-	  - Labelled with openpolicyagent.org/policy=rego.
+  - Created in a namespace listed in the --policies option. Configured in templates/opa/values.yaml.tpl under mgmt/configmapPolicies/namespaces
+	- Labelled with openpolicyagent.org/policy=rego.
 
 When a policy has been successfully loaded into OPA, the openpolicyagent.org/policy-status annotation is set to {"status": "ok"}.
 If loading fails for some reason (e.g., because of a parse error), the openpolicyagent.org/policy-status annotation is set to {"status": "error", "error": ...} where the error field contains details about the failure.
@@ -135,9 +135,9 @@ Rego queries are assertions on data stored in OPA. These queries can be used to 
 
 In Rego, policies are defined inside modules. Modules consist of:
 
-    - Exactly one Package declaration.
-    - Zero or more Import statements.
-    - Zero or more Rule definitions.
+  - Exactly one Package declaration.
+  - Zero or more Import statements.
+  - Zero or more Rule definitions.
 
 Please see the following documentation by opa on how to write Policies https://www.openpolicyagent.org/docs/how-do-i-write-policies.html
 
@@ -145,11 +145,11 @@ Please see the following documentation by opa on how to write Policies https://w
 
 Additionally, kube-mgmt is configured to periodically pull resource metadata that might be needed by the opa service to correctly evaluate API server events, in the case that the event does not contain all the needed data for the logic defined in the evaluation policy. The resources that kube-mgmt scans are configured in templates/opa/values.yaml.tpl under mgmt/replicate:
 
-  ```yaml
-    group/version/resource			# namespace scoped
-    group/version/resource        # cluster scoped
-  ```
-    <replicate-path> is configurable (via path) and defaults to kubernetes.
+
+  - group/version/resource		  	# namespace scoped
+  - group/version/resource        # cluster scoped
+  
+  <replicate-path> is configurable (via path) and defaults to kubernetes.
 
 The example below would replicate namespaces and ingress into OPA:
 
