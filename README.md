@@ -130,11 +130,11 @@ The example below would replicate namespaces and ingress into OPA:
 
 NOTE: IF we use replicate: remember to update the RBAC rules to allow permissions to replicate these things
 
- ### OPA-Policies
+ ### opa-policies
 
 kube-mgmt automatically discovers policies stored in ConfigMaps in kubernetes and loads them into OPA. kube-mgmt assumes a ConfigMap contains policies if the ConfigMap is:
 
-  - Created in a namespace listed in the --policies option. Configured in templates/opa/values.yaml.tpl under mgmt/configmapPolicies/namespaces:
+  - Created in a namespace listed in the --configmapPolicies option.
 	- Labelled with openpolicyagent.org/policy=rego.
 
 When a policy has been successfully loaded into OPA, the openpolicyagent.org/policy-status annotation is set to
