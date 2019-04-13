@@ -134,7 +134,7 @@ NOTE: IF we use replicate: remember to update the RBAC rules to allow permission
 
 kube-mgmt automatically discovers policies stored in ConfigMaps in kubernetes and loads them into OPA. kube-mgmt assumes a ConfigMap contains policies if the ConfigMap is:
 
-  - Created in a namespace listed in the --configmapPolicies option.
+  - Created in a namespace listed in the --policies option.
 	- Labelled with openpolicyagent.org/policy=rego.
 
 When a policy has been successfully loaded into OPA, the openpolicyagent.org/policy-status annotation is set to
