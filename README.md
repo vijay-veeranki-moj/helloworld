@@ -130,10 +130,14 @@ kube-mgmt automatically discovers policies stored in ConfigMaps in kubernetes an
   - Labelled with openpolicyagent.org/policy=rego.
 
 
-When a policy has been successfully loaded into OPA, the openpolicyagent.org/policy-status annotation is set to ```json {"status": "ok"}```
-If loading fails for some reason (e.g., because of a parse error), the openpolicyagent.org/policy-status annotation is set to 
-```json {"status": "error", "error": ...}``` where the error field contains details about the failure.
-
+When a policy has been successfully loaded into OPA, the openpolicyagent.org/policy-status annotation is set to
+```json
+{"status": "ok"}
+```
+If loading fails for some reason (e.g., because of a parse error), the openpolicyagent.org/policy-status annotation is set as below, where the error field contains details about the failure. 
+```json
+{"status": "error", "error": ...}
+``` 
 IMP NOTE:  Apply a ConfigMap that contains the main OPA policy and default response. This policy is used as an entry-point for policy evaluations and returns allowed:true if policies are not matched to inbound data.
 
 Please see the last part of admission-controller.yaml in https://www.openpolicyagent.org/docs/kubernetes-admission-control.html  which contains the main OPA policy 
