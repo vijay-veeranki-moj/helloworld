@@ -138,9 +138,7 @@ If loading fails for some reason (e.g., because of a parse error), the openpolic
 ```json
 {"status": "error", "error": ...}
 ``` 
-IMP NOTE:  Apply a ConfigMap that contains the main OPA policy and default response. This policy is used as an entry-point for policy evaluations and returns allowed:true if policies are not matched to inbound data.
-
-Please see the last part of admission-controller.yaml in https://www.openpolicyagent.org/docs/kubernetes-admission-control.html  which contains the main OPA policy 
+IMP NOTE: This [opa-default-system-main.yaml](https://github.com/ministryofjustice/cloud-platform-infrastructure/blob/master/terraform/cloud-platform-components/resources/opa/opa-default-system-main.yaml) applies a ConfigMap that contains the main OPA policy and default response. This policy is used as an entry-point for policy evaluations and returns allowed:true if policies are not matched to inbound data.
 
  ### How to write Policies
 
