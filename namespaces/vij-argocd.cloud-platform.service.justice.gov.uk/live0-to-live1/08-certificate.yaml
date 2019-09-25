@@ -1,0 +1,16 @@
+apiVersion: certmanager.k8s.io/v1alpha1
+kind: Certificate
+metadata:
+  name: live0-to-live1-cert
+spec:
+  secretName: live0-to-live1-cert
+  issuerRef:
+    name: letsencrypt-production
+    kind: ClusterIssuer
+  commonName: 'bitnami.apps.vij-gitops.cloud-platform.service.justice.gov.uk'
+  acme:
+    config:
+    - domains:
+      - 'bitnami.apps.vij-gitops.cloud-platform.service.justice.gov.uk'
+      dns01:
+        provider: route53-cloud-platform

@@ -1,0 +1,20 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: helloworld-rubyapp-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/custom-http-errors: "418,504,503"
+    nginx.ingress.kubernetes.io/default-backend: nginx-errors
+spec:
+  tls:
+  - hosts:
+    - second-vij.vij-backend.cloud-platform.service.justice.gov.uk
+    secretName: live0-to-live1-cert
+  rules:
+  - host: second-vij.vij-backend.cloud-platform.service.justice.gov.uk
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: rubyapp-service
+          servicePort: 8080
