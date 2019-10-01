@@ -27,7 +27,7 @@ for _f in namespaces/vij-argocd.cloud-platform.service.justice.gov.uk/*; do
   if [ -d "${_f}" ]; then
     namespace="$(basename ${_f})"
     log blue "applying resources for namespace ${namespace} in ${cluster}"
-    ( set -x; kubectl -n "${namespace}" apply -f "${_f}" )
+    ( set -x; kubectl get ns "${namespace}" -o jsonpath='{.metadata.annotations}' )
     terraform_resources_path="namespaces/vij-argocd.cloud-platform.service.justice.gov.uk/${namespace}/resources"
     # if [ -d "${terraform_resources_path}" ]; then
     #   (
