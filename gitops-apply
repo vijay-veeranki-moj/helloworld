@@ -28,7 +28,7 @@ for _f in namespaces/vij-argocd.cloud-platform.service.justice.gov.uk/*; do
     namespace="$(basename ${_f})"
     log blue "applying resources for namespace ${namespace} in ${cluster}"
     set -x;
-    repo-url=$(kubectl get ns "${namespace}" -o json | jq -r '.metadata.annotations["cloud-platform.justice.gov.uk/source-code"]')
+    repo-url="$(kubectl get ns "${namespace}" -o json | jq -r '.metadata.annotations["cloud-platform.justice.gov.uk/source-code"]')"
     echo ${repo-url}
     # set the uri 
     PIPELINE_NAME = "PIPELINE-${namespace}"
