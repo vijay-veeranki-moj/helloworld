@@ -27,25 +27,22 @@ for _f in namespaces/vij-argocd.cloud-platform.service.justice.gov.uk/*; do
   if [ -d "${_f}" ]; then
     namespace="$(basename ${_f})"
     log blue "applying resources for namespace ${namespace} in ${cluster}"
-    ( 
-      set -x;
-      if gitops_annotation is false
-        repo-url = `kubectl get ns "${namespace}" -o json | jq -r '.metadata.annotations["cloud-platform.justice.gov.uk/source-code"]'`
-        echo ${repo-url}
-        # set the uri 
-        PIPELINE_NAME = "PIPELINE-${namespace}"
-        fly \
-          -t current \
-          login \
-          -k \
-          -c "https://concourse.apps.pk-test-9.cloud-platform.service.justice.gov.uk" \
-          -n "main" \
-          -u ${CONCOURSE_BASIC_AUTH_USERNAME} \
-          -p ${CONCOURSE_BASIC_AUTH_PASSWORD}
-        
-        # fly set-pipeline
-        # config as yaml
-        # vars aas repo url and namespace
-    )
+    set -x;
+    repo-url = `kubectl get ns "${namespace}" -o json | jq -r '.metadata.annotations["cloud-platform.justice.gov.uk/source-code"]'`
+    echo ${repo-url}
+    # set the uri 
+    PIPELINE_NAME = "PIPELINE-${namespace}"
+    fly \
+      -t current \
+      login \
+      -k \
+      -c "https://concourse.apps.pk-test-9.cloud-platform.service.justice.gov.uk" \
+      -n "main" \
+      -u ${CONCOURSE_BASIC_AUTH_USERNAME} \
+      -p ${CONCOURSE_BASIC_AUTH_PASSWORD}
+    
+    # fly set-pipeline
+    # config as yaml
+    # vars aas repo url and namespace
   fi
 done
