@@ -30,15 +30,24 @@ for _f in namespaces/vij-argocd.cloud-platform.service.justice.gov.uk/*; do
     set -x;
     repourl=$(kubectl get ns ${namespace} -o json | jq -r '.metadata.annotations["cloud-platform.justice.gov.uk/source-code"]')
     # set the uri 
+    
+    apk add \
+      --no-cache \
+      --no-progress \
+      curl \
+      tar
+
+    curl -Ls "https://github.com/concourse/concourse/releases/download/v${CONCOURSE_FLY_VERSION}/fly-${CONCOURSE_FLY_VERSION}-linux-amd64.tgz" | tar zxf - -C /usr/local/bin
+
     PIPELINE_NAME=${namespace}
     fly \
       -t current \
       login \
       -k \
-      -c "https://concourse.apps.pk-test-9.cloud-platform.service.justice.gov.uk" \
-      -n "main"
-      # -u ${CONCOURSE_BASIC_AUTH_USERNAME} \
-      # -p ${CONCOURSE_BASIC_AUTH_PASSWORD}
+      -c ${CONCOURSE_URL} \
+      -n ${CONCOURSE_TEAM} \
+      -u ${CONCOURSE_BASIC_AUTH_USERNAME} \
+      -p ${CONCOURSE_BASIC_AUTH_PASSWORD}
     
     # fly set-pipeline
     # config as yaml
