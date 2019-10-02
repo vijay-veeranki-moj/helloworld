@@ -28,7 +28,7 @@ for _f in namespaces/vij-argocd.cloud-platform.service.justice.gov.uk/*; do
     namespace="$(basename ${_f})"
     log blue "applying resources for namespace ${namespace} in ${cluster}"
     set -x;
-    repourl=$(kubectl get ns ${namespace} -o json | jq -r '.metadata.annotations["cloud-platform.justice.gov.uk/source-code"]')
+    repo-url=$(kubectl get ns ${namespace} -o json | jq -r '.metadata.annotations["cloud-platform.justice.gov.uk/source-code"]')
     # set the uri 
     
     apk add \
@@ -39,7 +39,6 @@ for _f in namespaces/vij-argocd.cloud-platform.service.justice.gov.uk/*; do
 
     curl -Ls "https://github.com/concourse/concourse/releases/download/v${CONCOURSE_FLY_VERSION}/fly-${CONCOURSE_FLY_VERSION}-linux-amd64.tgz" | tar zxf - -C /usr/local/bin
 
-    PIPELINE_NAME=${namespace}
     fly \
       -t current \
       login \
@@ -49,6 +48,22 @@ for _f in namespaces/vij-argocd.cloud-platform.service.justice.gov.uk/*; do
       -u ${CONCOURSE_BASIC_AUTH_USERNAME} \
       -p ${CONCOURSE_BASIC_AUTH_PASSWORD}
     
+    fly -t current sync
+    echo ">>> setting pipeline '${i}'"
+    (
+      set -x
+      fly \
+        -t current \
+        set-pipeline \
+        -n \
+        -p "${namespace}" \
+        -c "./gitops-template.yaml" \
+        --var "repo-url=$(repo-url)"
+      fly \
+        -t current \
+        unpause-pipeline \
+        -p "${i}"
+    )
     # fly set-pipeline
     # config as yaml
     # vars aas repo url and namespace
