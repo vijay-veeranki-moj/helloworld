@@ -1,0 +1,88 @@
+# slack-notification-defaults: &SLACK_NOTIFICATION_DEFAULTS
+#   channel: '#cloud-platform-notify'
+#   silent: true
+# slack-attachments-defaults: &SLACK_ATTACHMENTS_DEFAULTS
+#   fallback: 'Finished building $BUILD_TEAM_NAME/$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME#$BUILD_NAME'
+#   title: '$BUILD_TEAM_NAME/$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME#$BUILD_NAME'
+#   title_link: 'https://concourse.cloud-platform.service.justice.gov.uk/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME'
+#   footer: concourse.cloud-platform.service.justice.gov.uk
+
+resources:
+- name: vijay-veeranki-helloworld-repo
+  type: git
+  source:
+    uri: ((repo-url))
+    branch: master
+    # git_crypt_key: ((repo-url))
+- name: tools-image
+  type: docker-image
+  source:
+    repository: ministryofjustice/cloud-platform-tools
+    tag: 1.1
+# - name: slack-alert
+#   type: slack-notification
+#   source:
+#     url: https://hooks.slack.com/services/((slack-hook-id))
+- name: every-30m
+  type: time
+  source:
+    interval: 30m
+
+resource_types:
+# - name: slack-notification
+#   type: docker-image
+#   source:
+#     repository: cfcommunity/slack-notification-resource
+#     tag: latest
+
+groups:
+# - name: live-0
+#   jobs: [apply-live-0]
+- name: template-gitops
+  jobs: [namespace-gitops]
+
+jobs:
+  - name: namespace-gitops
+    serial: true
+    plan:
+      - aggregate:
+        - get: every-30m
+          trigger: true
+        - get: vijay-veeranki-helloworld-repo
+          trigger: true
+        - get: tools-image
+      - task: apply-environments
+        image: tools-image
+        config:
+          platform: linux
+          inputs:
+            - name: vijay-veeranki-helloworld-repo
+          params:
+            # AWS_ACCESS_KEY_ID: ((aws-live-1.access-key-id))
+            # AWS_SECRET_ACCESS_KEY: ((aws-live-1.secret-access-key))
+            KUBECONFIG: /tmp/kubeconfig
+            TF_PLUGIN_CACHE_DIR: /tmp/terraform-plugin-cache
+            # PINGDOM_USER: ((cloud-platform-environments-pingdom.pingdom_user))
+            # PINGDOM_PASSWORD: ((cloud-platform-environments-pingdom.pingdom_password))
+            # PINGDOM_API_KEY: ((cloud-platform-environments-pingdom.pingdom_api_key))
+            # the variables prefixed with PIPELINE_ are used by the apply script
+            PIPELINE_CLUSTER: pk-test-9.cloud-platform.service.justice.gov.uk
+            PIPELINE_STATE_BUCKET: cloud-platform-terraform-state
+            PIPELINE_STATE_KEY_PREFIX: "vijay-veeranki-moj/"
+            PIPELINE_STATE_REGION: "eu-west-1"
+            PIPELINE_CLUSTER_STATE_BUCKET: cloud-platform-terraform-state
+            PIPELINE_CLUSTER_STATE_KEY_PREFIX: "cloud-platform/"
+          run:
+            path: /bin/sh
+            dir: vijay-veeranki-helloworld-repo
+            args:
+              - -c
+              - |
+                mkdir -p "${TF_PLUGIN_CACHE_DIR}"
+        on_failure:
+          # put: slack-alert
+          # params:
+          #   <<: *SLACK_NOTIFICATION_DEFAULTS
+          #   attachments:
+          #     - color: "danger"
+          #       <<: *SLACK_ATTACHMENTS_DEFAULTS
