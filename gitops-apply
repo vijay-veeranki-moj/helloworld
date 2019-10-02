@@ -18,6 +18,8 @@ log() {
 }
 
 cluster="${PIPELINE_CLUSTER}"
+
+
 echo ${cluster}
 log green "applying for cluster ${cluster}"
 ( set -x; kubectl config use-context "${cluster}" ) || { log red "no context found, skipping ${cluster}" && exit 1; }
@@ -27,7 +29,26 @@ for _f in namespaces/vij-argocd.cloud-platform.service.justice.gov.uk/*; do
     log blue "applying resources for namespace ${namespace} in ${cluster}"
     ( 
       set -x;
-      annotations = $(kubectl get ns "${namespace}" -o json | jq -r '.metadata.annotations["cloud-platform.justice.gov.uk/source-code"]')
+      if gitops_annotation is false
+        repo-url = `kubectl get ns "${namespace}" -o json | jq -r '.metadata.annotations["cloud-platform.justice.gov.uk/source-code"]'`
+        echo ${repo-url}
+        # set the uri 
+        PIPELINE_NAME = "PIPELINE-${namespace}"
+        fly \
+          -t current \
+          login \
+          -k \
+          -c "https://concourse.apps.pk-test-9.cloud-platform.service.justice.gov.uk" \
+          -n "main" \
+          -u ${CONCOURSE_BASIC_AUTH_USERNAME} \
+          -p ${CONCOURSE_BASIC_AUTH_PASSWORD}
+        
+        # fly set-pipeline
+        # config as yaml
+        # vars aas repo url and namespace
+
+        
+
       echo ${annotations}
     )
     # terraform_resources_path="namespaces/vij-argocd.cloud-platform.service.justice.gov.uk/${namespace}/resources"
@@ -48,3 +69,8 @@ for _f in namespaces/vij-argocd.cloud-platform.service.justice.gov.uk/*; do
     # fi
   fi
 done
+
+
+yaml file
+namespace: test-namespace
+git_url: https://github.com/test-repo_url
