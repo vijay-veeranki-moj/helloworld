@@ -8,25 +8,25 @@
 #   footer: concourse.cloud-platform.service.justice.gov.uk
 
 resources:
-- name: ((namespace))-repo
-  type: git
-  source:
-    uri: ((repo-url))
-    branch: master
-    # git_crypt_key: ((repo-url))
-- name: tools-image
-  type: docker-image
-  source:
-    repository: ministryofjustice/cloud-platform-tools
-    tag: 1.1
-# - name: slack-alert
-#   type: slack-notification
-#   source:
-#     url: https://hooks.slack.com/services/((slack-hook-id))
-- name: every-30m
-  type: time
-  source:
-    interval: 30m
+  - name: ((namespace))-repo
+    type: git
+    source:
+      uri: ((repo-url))
+      branch: master
+      # git_crypt_key: ((repo-url))
+  - name: tools-image
+    type: docker-image
+    source:
+      repository: ministryofjustice/cloud-platform-tools
+      tag: 1.1
+  # - name: slack-alert
+  #   type: slack-notification
+  #   source:
+  #     url: https://hooks.slack.com/services/((slack-hook-id))
+  - name: every-30m
+    type: time
+    source:
+      interval: 30m
 
 resource_types:
 # - name: slack-notification
@@ -36,21 +36,21 @@ resource_types:
 #     tag: latest
 
 groups:
-# - name: live-0
-#   jobs: [apply-live-0]
-- name: template-gitops
-  jobs: [namespace-gitops]
+  # - name: live-0
+  #   jobs: [apply-live-0]
+  - name: template-gitops
+    jobs: [namespace-gitops]
 
 jobs:
   - name: namespace-gitops
     serial: true
     plan:
       - aggregate:
-        - get: every-30m
-          trigger: true
-        - get: ((namespace))-repo
-          trigger: true
-        - get: tools-image
+          - get: every-30m
+            trigger: true
+          - get: ((namespace))-repo
+            trigger: true
+          - get: tools-image
       - task: apply-environments
         image: tools-image
         config:
@@ -73,20 +73,18 @@ jobs:
             # PIPELINE_CLUSTER_STATE_KEY_PREFIX: "cloud-platform/"
             NAMESPACE: ((namespace))
           run:
+            path: /bin/sh
             dir: ((namespace))-repo
             args:
               - -c
               - |
                 echo -n ${K8S_CLUSTER_CERT} | base64 -d > ./ca.crt
                 echo -n ${K8S_TOKEN} | base64 -d > ./token
-                cat ./ca.crt
-                cat ./token
                 echo ${NAMESPACE}
-                set -x;
-                result=$(kubectl config set-cluster ${PIPELINE_CLUSTER} --certificate-authority=./ca.crt --server=https://api.${PIPELINE_CLUSTER})
-                result=$(kubectl config set-credentials gitops-${NAMESPACE} --token=./token)
-                result=$(kubectl config set-context ${PIPELINE_CLUSTER} --cluster=${PIPELINE_CLUSTER} --user=gitops-${NAMESPACE} --namespace=${NAMESPACE})
-                kubectl config use-context "${PIPELINE_CLUSTER}"
+                kubectl config set-cluster ${PIPELINE_CLUSTER} --certificate-authority=./ca.crt --server=https://api.${PIPELINE_CLUSTER}
+                kubectl config set-credentials gitops-${NAMESPACE} --token=./token
+                kubectl config set-context ${PIPELINE_CLUSTER} --cluster=${PIPELINE_CLUSTER} --user=gitops-${NAMESPACE} --namespace=${NAMESPACE}
+                kubectl config use-context ${PIPELINE_CLUSTER}
                 kubectl get secrets -n ${NAMESPACE}
                 # chmod 777 ./gitops-deploy
                 # ./gitops-deploy
