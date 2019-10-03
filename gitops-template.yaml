@@ -79,14 +79,12 @@ jobs:
               - -c
               - |
                 echo -n ${K8S_CLUSTER_CERT} | base64 -d > ./ca.crt
-                echo -n ${K8S_TOKEN} | base64 -d > ./token
                 echo ${NAMESPACE}
                 kubectl config set-cluster ${PIPELINE_CLUSTER} --certificate-authority=./ca.crt --server=https://api.${PIPELINE_CLUSTER}
-                kubectl config set-credentials gitops-${NAMESPACE} --token=./token
+                kubectl config set-credentials gitops-${NAMESPACE} --token=${K8S_TOKEN}
                 kubectl config set-context ${PIPELINE_CLUSTER} --cluster=${PIPELINE_CLUSTER} --user=gitops-${NAMESPACE} --namespace=${NAMESPACE}
                 kubectl config use-context ${PIPELINE_CLUSTER}
                 kubectl config get-contexts ${PIPELINE_CLUSTER}
-                cat ~/.kube/config
                 kubectl get secrets -n ${NAMESPACE}
                 # chmod 777 ./gitops-deploy
                 # ./gitops-deploy
