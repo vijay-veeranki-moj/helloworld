@@ -16,17 +16,17 @@ roleRef:
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: gitops-test-3
+  name: gitops-vv-test-3
   namespace: vv-test-3
 ---
 kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1beta1
 metadata:
-  name: gitops-test-3
+  name: gitops-vv-test-3
   namespace: vv-test-3
 subjects:
 - kind: ServiceAccount
-  name: gitops-test-3
+  name: gitops-vv-test-3
   namespace: vv-test-3
 roleRef:
   kind: ClusterRole

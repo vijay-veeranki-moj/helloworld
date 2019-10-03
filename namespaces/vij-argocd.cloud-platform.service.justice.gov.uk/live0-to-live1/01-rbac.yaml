@@ -16,17 +16,17 @@ roleRef:
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: tiller
+  name: gitops-live0-to-live1
   namespace: live0-to-live1
 ---
 kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1beta1
 metadata:
-  name: tiller
+  name: gitops-live0-to-live1
   namespace: live0-to-live1
 subjects:
 - kind: ServiceAccount
-  name: tiller
+  name: gitops-live0-to-live1
   namespace: live0-to-live1
 roleRef:
   kind: ClusterRole
