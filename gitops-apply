@@ -42,14 +42,14 @@ for _f in namespaces/vij-argocd.cloud-platform.service.justice.gov.uk/*; do
     clusters:
     - cluster:
         certificate-authority-data: ${servercadata}
-        server: https://api.${PIPELINE_CLUSTER}
-      name: ${PIPELINE_CLUSTER}
+        server: https://api.${cluster}
+      name: ${cluster}
     contexts:
     - context:
-        cluster: ${PIPELINE_CLUSTER}
+        cluster: ${cluster}
         user: ${namespace}
-      name: svcs-acct-context
-    current-context: svcs-acct-context
+      name: ${cluster}
+    current-context: ${cluster}
 EOF
 
    log green "Copying kubeconfig file for ${namespace} in to s3 bucket"
