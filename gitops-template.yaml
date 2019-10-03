@@ -92,8 +92,8 @@ jobs:
                 export KUBECONFIG=${KUBECONFIG}
                 kubectl config use-context ${PIPELINE_CLUSTER}
                 kubectl get secrets -n ${NAMESPACE}
-                # chmod 777 ./gitops-deploy
-                # ./gitops-deploy
+                chmod +x ./gitops-deploy
+                ./gitops-deploy
         on_failure:
           # put: slack-alert
           # params:
