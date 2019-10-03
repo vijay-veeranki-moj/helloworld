@@ -31,7 +31,8 @@ for _f in namespaces/vij-argocd.cloud-platform.service.justice.gov.uk/*; do
     repourl=$(kubectl get ns ${namespace} -o json | jq -r '.metadata.annotations["cloud-platform.justice.gov.uk/source-code"]')
     set +x;
     token=$(kubectl -n ${namespace} get secret $(kubectl -n vv-test get serviceaccount gitops-${namespace} -o jsonpath='{.secrets[0].name}') -o jsonpath='{.data.token}' | base64 --decode )
-    set -x
     certificate-data=$(kubectl config view --raw -o json | jq -r '.clusters[0].cluster."certificate-authority-data"' | tr -d '"' | base64 --decode)
+    set -x;
+    server=$(kubectl config view --raw -o json | jq -r '.clusters[0].cluster."server"' | tr -d '"')
   fi
 done
