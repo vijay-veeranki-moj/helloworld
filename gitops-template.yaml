@@ -85,9 +85,10 @@ jobs:
                 kubectl config set-context ${PIPELINE_CLUSTER} --cluster=${PIPELINE_CLUSTER} --user=gitops-${NAMESPACE} --namespace=${NAMESPACE}
                 ( set -x; kubectl config use-context "${PIPELINE_CLUSTER}" ) || { log red "no context found, skipping ${cluster}" && exit 1; }
                 log green "applying to namespace ${NAMESPACE}"
+                set -x;
                 kubectl get pods -n ${NAMESPACE}
-                chmod 777 ./gitops-deploy
-                ./gitops-deploy
+                # chmod 777 ./gitops-deploy
+                # ./gitops-deploy
         on_failure:
           # put: slack-alert
           # params:
