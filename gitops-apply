@@ -30,7 +30,7 @@ for _f in namespaces/vij-argocd.cloud-platform.service.justice.gov.uk/*; do
     set +x;
     repourl=$(kubectl get ns ${namespace} -o json | jq -r '.metadata.annotations["cloud-platform.justice.gov.uk/source-code"]')
     serviceaccounttoken=$(kubectl -n ${namespace} get secret $(kubectl -n ${namespace} get serviceaccount gitops-${namespace} -o jsonpath='{.secrets[0].name}') -o jsonpath='{.data.token}' | base64 --decode)
-    servercadata=$(kubectl get secrets -n ${namespace}  $(kubectl -n ${namespace} get serviceaccount gitops-${namespace} -o jsonpath='{.secrets[0].name}') -o jsonpath='{.data.ca\.crt}' base64 --decode)
+    servercadata=$(kubectl get secrets -n ${namespace}  $(kubectl -n ${namespace} get serviceaccount gitops-${namespace} -o jsonpath='{.secrets[0].name}') -o jsonpath='{.data.ca\.crt}' | base64 --decode)
     set -x; 
     # set the uri 
     # get the token and base64 ca, create a config file and push to s3
