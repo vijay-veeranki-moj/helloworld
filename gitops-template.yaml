@@ -73,7 +73,7 @@ jobs:
             # PIPELINE_CLUSTER_STATE_KEY_PREFIX: "cloud-platform/"
             NAMESPACE: ((namespace))
           run:
-            path: /bin/sh
+            path: bash
             dir: ((namespace))-repo
             args:
               - -c
