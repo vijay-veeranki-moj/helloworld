@@ -89,7 +89,6 @@ jobs:
                 # kubectl config get-contexts ${PIPELINE_CLUSTER}
                 # kubectl config view --minify
                 aws s3 cp s3://cloud-platform-pk-test-9-kubecfg/kubeconfig-${NAMESPACE} /tmp/kubeconfig
-                cat /tmp/kubeconfig
                 export KUBECONFIG=${KUBECONFIG}
                 kubectl config use-context ${PIPELINE_CLUSTER}
                 kubectl get secrets -n ${NAMESPACE}
