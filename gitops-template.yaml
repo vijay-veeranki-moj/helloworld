@@ -60,7 +60,6 @@ jobs:
           params:
             KUBECONFIG_AWS_ACCESS_KEY_ID: ((aws-pk-test-9.access-key-id))
             KUBECONFIG_AWS_SECRET_ACCESS_KEY: ((aws-pk-test-9.secret-access-key))
-            KUBECONFIG: /tmp/kubeconfig
             # TF_PLUGIN_CACHE_DIR: /tmp/terraform-plugin-cache
             # the variables prefixed with PIPELINE_ are used by the apply script
             PIPELINE_CLUSTER: pk-test-9.cloud-platform.service.justice.gov.uk
