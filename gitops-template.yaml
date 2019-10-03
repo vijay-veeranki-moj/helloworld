@@ -1,0 +1,97 @@
+# slack-notification-defaults: &SLACK_NOTIFICATION_DEFAULTS
+#   channel: '#cloud-platform-notify'
+#   silent: true
+# slack-attachments-defaults: &SLACK_ATTACHMENTS_DEFAULTS
+#   fallback: 'Finished building $BUILD_TEAM_NAME/$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME#$BUILD_NAME'
+#   title: '$BUILD_TEAM_NAME/$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME#$BUILD_NAME'
+#   title_link: 'https://concourse.cloud-platform.service.justice.gov.uk/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME'
+#   footer: concourse.cloud-platform.service.justice.gov.uk
+
+resources:
+- name: ((namespace))-repo
+  type: git
+  source:
+    uri: ((repo-url))
+    branch: master
+    # git_crypt_key: ((repo-url))
+- name: tools-image
+  type: docker-image
+  source:
+    repository: ministryofjustice/cloud-platform-tools
+    tag: 1.1
+# - name: slack-alert
+#   type: slack-notification
+#   source:
+#     url: https://hooks.slack.com/services/((slack-hook-id))
+- name: every-30m
+  type: time
+  source:
+    interval: 30m
+
+resource_types:
+# - name: slack-notification
+#   type: docker-image
+#   source:
+#     repository: cfcommunity/slack-notification-resource
+#     tag: latest
+
+groups:
+# - name: live-0
+#   jobs: [apply-live-0]
+- name: template-gitops
+  jobs: [namespace-gitops]
+
+jobs:
+  - name: namespace-gitops
+    serial: true
+    plan:
+      - aggregate:
+        - get: every-30m
+          trigger: true
+        - get: ((namespace))-repo
+          trigger: true
+        - get: tools-image
+      - task: apply-environments
+        image: tools-image
+        config:
+          platform: linux
+          inputs:
+            - name: ((namespace))-repo
+          params:
+            KUBECONFIG_AWS_ACCESS_KEY_ID: ((aws-pk-test-9.access-key-id))
+            KUBECONFIG_AWS_SECRET_ACCESS_KEY: ((aws-pk-test-9.secret-access-key))
+            KUBECONFIG: /tmp/kubeconfig
+            # TF_PLUGIN_CACHE_DIR: /tmp/terraform-plugin-cache
+            # the variables prefixed with PIPELINE_ are used by the apply script
+            PIPELINE_CLUSTER: pk-test-9.cloud-platform.service.justice.gov.uk
+            PIPELINE_STATE_BUCKET: cloud-platform-terraform-state
+            K8S_CLUSTER_CERT: ((service-ca-data))
+            K8S_TOKEN: ((service-account-token))
+            # PIPELINE_STATE_KEY_PREFIX: "vijay-veeranki-moj/"
+            # PIPELINE_STATE_REGION: "eu-west-1"
+            # PIPELINE_CLUSTER_STATE_BUCKET: cloud-platform-terraform-state
+            # PIPELINE_CLUSTER_STATE_KEY_PREFIX: "cloud-platform/"
+            NAMESPACE: ((namespace))
+          run:
+            path: /bin/sh
+            dir: ((namespace))-repo
+            args:
+              - -c
+              - |
+                echo -n ${K8S_CLUSTER_CERT} > ./ca.crt
+                kubectl config set-cluster ${PIPELINE_CLUSTER} --certificate-authority=./ca.crt --server=https://api.${PIPELINE_CLUSTER}
+                kubectl config set-credentials gitops-${NAMESPACE} --token=${K8S_TOKEN}
+                kubectl config set-context ${PIPELINE_CLUSTER} --cluster=${PIPELINE_CLUSTER} --user=gitops-${NAMESPACE} --namespace=${NAMESPACE}
+                ( 
+                set -x; kubectl config use-context "${PIPELINE_CLUSTER}"
+                kubectl get pods -n ${NAMESPACE}
+                )
+                # chmod 777 ./gitops-deploy
+                # ./gitops-deploy
+        on_failure:
+          # put: slack-alert
+          # params:
+          #   <<: *SLACK_NOTIFICATION_DEFAULTS
+          #   attachments:
+          #     - color: "danger"
+          #       <<: *SLACK_ATTACHMENTS_DEFAULTS

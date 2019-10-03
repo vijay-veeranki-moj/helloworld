@@ -1,0 +1,73 @@
+#!/bin/bash
+
+set -o errexit
+set -o pipefail
+set -o nounset
+
+# shellcheck source=.common.sh
+# source "$(dirname ${BASH_SOURCE[0]})/.common.sh"
+
+log() {
+  _fg=''
+  [ "${1}" = "red" ] && _fg='\033[0;31m'
+  [ "${1}" = "blue" ] && _fg='\033[0;34m'
+  [ "${1}" = "green" ] && _fg='\033[0;32m'
+  shift
+  # shellcheck disable=SC2145
+  echo -e "${_fg}>>> ${@}\033[0m"
+}
+
+cluster="${PIPELINE_CLUSTER}"
+
+
+echo ${cluster}
+log green "applying for cluster ${cluster}"
+( set -x; kubectl config use-context "${cluster}" ) || { log red "no context found, skipping ${cluster}" && exit 1; }
+for _f in namespaces/vij-argocd.cloud-platform.service.justice.gov.uk/*; do
+  if [ -d "${_f}" ]; then
+    namespace="$(basename ${_f})"
+    log blue "applying resources for namespace ${namespace} in ${cluster}"
+    set -x;
+    repourl=$(kubectl get ns ${namespace} -o json | jq -r '.metadata.annotations["cloud-platform.justice.gov.uk/source-code"]')
+    serviceaccounttoken=$(kubectl -n ${namespace} get secret $(kubectl -n ${namespace} get serviceaccount gitops-${namespace} -o jsonpath='{.secrets[0].name}') -o jsonpath='{.data.token}' | base64 --decode)
+    servercadata=$(kubectl get secrets -n ${namespace}  $(kubectl -n ${namespace} get serviceaccount gitops-${namespace} -o jsonpath='{.secrets[0].name}') -o jsonpath='{.data.ca\.crt}')
+    set -x; 
+    # set the uri 
+    # get the token and base64 ca, create a config file and push to s3
+    apk add \
+      --no-cache \
+      --no-progress \
+      curl \
+      tar
+
+    curl -Ls "https://github.com/concourse/concourse/releases/download/v${CONCOURSE_FLY_VERSION}/fly-${CONCOURSE_FLY_VERSION}-linux-amd64.tgz" | tar zxf - -C /usr/local/bin
+
+    fly \
+      -t current \
+      login \
+      -k \
+      -c ${CONCOURSE_URL} \
+      -n ${CONCOURSE_TEAM} \
+      -u ${CONCOURSE_BASIC_AUTH_USERNAME} \
+      -p ${CONCOURSE_BASIC_AUTH_PASSWORD}
+    
+    fly -t current sync
+    echo ">>> setting pipeline '${namespace}'"
+    (
+      set +x
+      fly \
+        -t current \
+        set-pipeline \
+        -n \
+        -p "${namespace}" \
+        -c "./gitops-template.yaml" \
+        --var "repo-url=${repourl}" \
+        --var "namespace=${namespace}" \
+        --var "service-account-token=${serviceaccounttoken}" \
+        --var "service-ca-data=${servercadata}"
+    )
+    # fly set-pipeline
+    # config as yaml
+    # vars aas repo url and namespace
+  fi
+done
