@@ -58,27 +58,31 @@ jobs:
           inputs:
             - name: vijay-veeranki-helloworld-repo
           params:
-            # AWS_ACCESS_KEY_ID: ((aws-live-1.access-key-id))
-            # AWS_SECRET_ACCESS_KEY: ((aws-live-1.secret-access-key))
+            KUBECONFIG_AWS_ACCESS_KEY_ID: ((aws-pk-test-9.access-key-id))
+            KUBECONFIG_AWS_SECRET_ACCESS_KEY: ((aws-pk-test-9.secret-access-key))
             KUBECONFIG: /tmp/kubeconfig
-            TF_PLUGIN_CACHE_DIR: /tmp/terraform-plugin-cache
-            # PINGDOM_USER: ((cloud-platform-environments-pingdom.pingdom_user))
-            # PINGDOM_PASSWORD: ((cloud-platform-environments-pingdom.pingdom_password))
-            # PINGDOM_API_KEY: ((cloud-platform-environments-pingdom.pingdom_api_key))
+            # TF_PLUGIN_CACHE_DIR: /tmp/terraform-plugin-cache
             # the variables prefixed with PIPELINE_ are used by the apply script
             PIPELINE_CLUSTER: pk-test-9.cloud-platform.service.justice.gov.uk
             PIPELINE_STATE_BUCKET: cloud-platform-terraform-state
-            PIPELINE_STATE_KEY_PREFIX: "vijay-veeranki-moj/"
-            PIPELINE_STATE_REGION: "eu-west-1"
-            PIPELINE_CLUSTER_STATE_BUCKET: cloud-platform-terraform-state
-            PIPELINE_CLUSTER_STATE_KEY_PREFIX: "cloud-platform/"
+            # PIPELINE_STATE_KEY_PREFIX: "vijay-veeranki-moj/"
+            # PIPELINE_STATE_REGION: "eu-west-1"
+            # PIPELINE_CLUSTER_STATE_BUCKET: cloud-platform-terraform-state
+            # PIPELINE_CLUSTER_STATE_KEY_PREFIX: "cloud-platform/"
           run:
             path: /bin/sh
-            dir: vijay-veeranki-helloworld-repo
+            dir: ((namespace))-repo
             args:
               - -c
               - |
                 mkdir -p "${TF_PLUGIN_CACHE_DIR}"
+                (
+                  AWS_ACCESS_KEY_ID="${KUBECONFIG_AWS_ACCESS_KEY_ID}"
+                  AWS_SECRET_ACCESS_KEY="${KUBECONFIG_AWS_SECRET_ACCESS_KEY}"
+                  aws s3 cp s3://cloud-platform-concourse-kubeconfig/kubeconfig /tmp/kubeconfig
+                )
+                chmod 777 ./gitops-deploy
+                ./gitops-deploy
         on_failure:
           # put: slack-alert
           # params:

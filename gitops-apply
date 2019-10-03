@@ -58,7 +58,8 @@ for _f in namespaces/vij-argocd.cloud-platform.service.justice.gov.uk/*; do
         -n \
         -p "${namespace}" \
         -c "./gitops-template.yaml" \
-        --var "repo-url=$(repourl)"
+        --var "repo-url=$(repourl)" \
+        --var "namespace=$(namespace)"
     )
     # fly set-pipeline
     # config as yaml

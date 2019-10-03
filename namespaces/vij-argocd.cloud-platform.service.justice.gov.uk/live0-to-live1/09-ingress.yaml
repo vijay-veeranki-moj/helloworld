@@ -8,10 +8,10 @@ metadata:
 spec:
   tls:
   - hosts:
-    - bitnami.apps.vij-gitops.cloud-platform.service.justice.gov.uk
+    - gitops-rubyapp5.apps.pk-test-9.cloud-platform.service.justice.gov.uk
     secretName: live0-to-live1-cert
   rules:
-  - host: bitnami.apps.vij-gitops.cloud-platform.service.justice.gov.uk
+  - host: gitops-rubyapp5.apps.pk-test-9.cloud-platform.service.justice.gov.uk
     http:
       paths:
       - path: /
