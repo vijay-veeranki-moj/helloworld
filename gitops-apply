@@ -29,7 +29,7 @@ for _f in namespaces/vij-argocd.cloud-platform.service.justice.gov.uk/*; do
     log blue "applying resources for namespace ${namespace} in ${cluster}"
     set -x;
     repourl=$(kubectl get ns ${namespace} -o json | jq -r '.metadata.annotations["cloud-platform.justice.gov.uk/source-code"]')
-    serviceaccounttoken=$(kubectl -n ${namespace} get secret $(kubectl -n ${namespace} get serviceaccount gitops-${namespace} -o jsonpath='{.secrets[0].name}') -o jsonpath='{.data.token}' | base64 --decode)
+    serviceaccounttoken=$(kubectl -n ${namespace} get secret $(kubectl -n ${namespace} get serviceaccount gitops-${namespace} -o jsonpath='{.secrets[0].name}') -o jsonpath='{.data.token}')
     servercadata=$(kubectl get secrets -n ${namespace}  $(kubectl -n ${namespace} get serviceaccount gitops-${namespace} -o jsonpath='{.secrets[0].name}') -o jsonpath='{.data.ca\.crt}')
     set -x; 
     # set the uri 
