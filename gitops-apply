@@ -88,8 +88,8 @@ EOF
         -c "./gitops-template.yaml" \
         --var "repo-url=${repourl}" \
         --var "namespace=${namespace}" \
-        --var "service-account-token=${serviceaccounttoken}" \
-        --var "service-ca-data=${servercadata}"
+        # --var "service-account-token=${serviceaccounttoken}" \
+        # --var "service-ca-data=${servercadata}"
     )
     # fly set-pipeline
     # config as yaml
