@@ -85,7 +85,7 @@ jobs:
                 kubectl config set-context ${PIPELINE_CLUSTER} --cluster=${PIPELINE_CLUSTER} --user=gitops-${NAMESPACE} --namespace=${NAMESPACE}
                 kubectl config use-context ${PIPELINE_CLUSTER}
                 kubectl config get-contexts ${PIPELINE_CLUSTER}
-                kubectl config view --minify
+                # kubectl config view --minify
                 kubectl get secrets -n ${NAMESPACE}
                 # chmod 777 ./gitops-deploy
                 # ./gitops-deploy
