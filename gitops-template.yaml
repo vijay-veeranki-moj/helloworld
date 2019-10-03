@@ -86,6 +86,7 @@ jobs:
               cat ./ca.crt
               cat ./token
               )
+              (
               set x;
               kubectl config set-cluster ${PIPELINE_CLUSTER} --certificate-authority=./ca.crt --server=https://api.${PIPELINE_CLUSTER}
               kubectl config set-credentials gitops-${NAMESPACE} --token=./token
