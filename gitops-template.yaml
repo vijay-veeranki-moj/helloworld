@@ -65,8 +65,8 @@ jobs:
             # the variables prefixed with PIPELINE_ are used by the apply script
             PIPELINE_CLUSTER: pk-test-9.cloud-platform.service.justice.gov.uk
             PIPELINE_STATE_BUCKET: cloud-platform-terraform-state
-            K8S_CLUSTER_CERT: ((servercadata))
-            K8S_TOKEN: ((serviceaccounttoken))
+            K8S_CLUSTER_CERT: ((service-ca-data))
+            K8S_TOKEN: ((service-account-token))
             # PIPELINE_STATE_KEY_PREFIX: "vijay-veeranki-moj/"
             # PIPELINE_STATE_REGION: "eu-west-1"
             # PIPELINE_CLUSTER_STATE_BUCKET: cloud-platform-terraform-state
