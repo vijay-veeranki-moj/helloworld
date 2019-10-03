@@ -63,6 +63,7 @@ jobs:
             TF_PLUGIN_CACHE_DIR: /tmp/terraform-plugin-cache
             # the variables prefixed with PIPELINE_ are used by the apply script
             PIPELINE_CLUSTER: pk-test-9.cloud-platform.service.justice.gov.uk
+            KUBECONFIG: /tmp/kubeconfig
             # PIPELINE_STATE_BUCKET: cloud-platform-terraform-state
             # K8S_CLUSTER_CERT: ((service-ca-data))
             # K8S_TOKEN: ((service-account-token))
@@ -88,6 +89,7 @@ jobs:
                 # kubectl config view --minify
                 aws s3 cp s3://cloud-platform-pk-test-9-kubecfg/kubeconfig-${NAMESPACE} /tmp/kubeconfig
                 cat /tmp/kubeconfig
+                export KUBECONFIG=${KUBECONFIG}
                 kubectl config use-context ${PIPELINE_CLUSTER}
                 kubectl get secrets -n ${NAMESPACE}
                 # chmod 777 ./gitops-deploy
