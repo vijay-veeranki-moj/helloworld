@@ -83,9 +83,9 @@ jobs:
                 cat ./ca.crt
                 cat ./token
                 echo ${NAMESPACE}
-                result=kubectl config set-cluster ${PIPELINE_CLUSTER} --certificate-authority=./ca.crt --server=https://api.${PIPELINE_CLUSTER}
-                result=kubectl config set-credentials gitops-${NAMESPACE} --token=./token
-                result=kubectl config set-context ${PIPELINE_CLUSTER} --cluster=${PIPELINE_CLUSTER} --user=gitops-${NAMESPACE} --namespace=${NAMESPACE}
+                result=$(kubectl config set-cluster ${PIPELINE_CLUSTER} --certificate-authority=./ca.crt --server=https://api.${PIPELINE_CLUSTER})
+                result=$(kubectl config set-credentials gitops-${NAMESPACE} --token=./token)
+                result=$(kubectl config set-context ${PIPELINE_CLUSTER} --cluster=${PIPELINE_CLUSTER} --user=gitops-${NAMESPACE} --namespace=${NAMESPACE})
                 ( 
                 set -x; kubectl config use-context "${PIPELINE_CLUSTER}"
                 kubectl get secrets -n ${NAMESPACE}
