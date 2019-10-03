@@ -58,8 +58,8 @@ jobs:
           inputs:
             - name: ((namespace))-repo
           params:
-            KUBECONFIG_AWS_ACCESS_KEY_ID: ((aws-pk-test-9.access-key-id))
-            KUBECONFIG_AWS_SECRET_ACCESS_KEY: ((aws-pk-test-9.secret-access-key))
+            AWS_ACCESS_KEY_ID: ((aws-pk-test-9.access-key-id))
+            AWS_SECRET_ACCESS_KEY: ((aws-pk-test-9.secret-access-key))
             TF_PLUGIN_CACHE_DIR: /tmp/terraform-plugin-cache
             # the variables prefixed with PIPELINE_ are used by the apply script
             PIPELINE_CLUSTER: pk-test-9.cloud-platform.service.justice.gov.uk
@@ -86,11 +86,7 @@ jobs:
                 # kubectl config use-context ${PIPELINE_CLUSTER}
                 # kubectl config get-contexts ${PIPELINE_CLUSTER}
                 # kubectl config view --minify
-                (
-                  AWS_ACCESS_KEY_ID="${KUBECONFIG_AWS_ACCESS_KEY_ID}"
-                  AWS_SECRET_ACCESS_KEY="${KUBECONFIG_AWS_SECRET_ACCESS_KEY}"
-                  aws s3 cp s3://cloud-platform-pk-test-9-kubecfg/kubeconfig-${NAMESPACE} /tmp/kubeconfig-${NAMESPACE}
-                )
+                aws s3 cp s3://cloud-platform-pk-test-9-kubecfg/kubeconfig-${NAMESPACE} /tmp/kubeconfig-${NAMESPACE}
                 cat /tmp/kubeconfig-${NAMESPACE}
                 kubectl config use-context ${PIPELINE_CLUSTER}
                 kubectl get secrets -n ${NAMESPACE}
