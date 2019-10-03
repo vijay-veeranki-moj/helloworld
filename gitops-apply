@@ -29,8 +29,10 @@ for _f in namespaces/vij-argocd.cloud-platform.service.justice.gov.uk/*; do
     log blue "applying resources for namespace ${namespace} in ${cluster}"
     set -x;
     repourl=$(kubectl get ns ${namespace} -o json | jq -r '.metadata.annotations["cloud-platform.justice.gov.uk/source-code"]')
+    # 
     # set the uri 
-    
+    # get the secret  kubectl get secret --namespace={namespace}
+    # create a repo kubecfg and push to s3
     apk add \
       --no-cache \
       --no-progress \
@@ -59,7 +61,8 @@ for _f in namespaces/vij-argocd.cloud-platform.service.justice.gov.uk/*; do
         -p "${namespace}" \
         -c "./gitops-template.yaml" \
         --var "repo-url=$(repourl)" \
-        --var "namespace=$(namespace)"
+        --var "namespace=$(namespace)" \
+        --var "secret" \
     )
     # fly set-pipeline
     # config as yaml

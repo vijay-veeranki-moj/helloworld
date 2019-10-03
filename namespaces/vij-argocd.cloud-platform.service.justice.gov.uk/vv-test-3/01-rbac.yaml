@@ -2,7 +2,7 @@ kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: vv-test-admin
-  namespace: vv-test
+  namespace: vv-test-3
 subjects:
   - kind: Group
     name: "github:test-webops"
@@ -16,18 +16,18 @@ roleRef:
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: tiller
-  namespace: vv-test
+  name: gitops-test-3
+  namespace: vv-test-3
 ---
 kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1beta1
 metadata:
-  name: tiller
-  namespace: vv-test
+  name: gitops-test-3
+  namespace: vv-test-3
 subjects:
 - kind: ServiceAccount
-  name: tiller
-  namespace: vv-test
+  name: gitops-test-3
+  namespace: vv-test-3
 roleRef:
   kind: ClusterRole
   name: cluster-admin
