@@ -8,7 +8,7 @@
 #   footer: concourse.cloud-platform.service.justice.gov.uk
 
 resources:
-- name: vijay-veeranki-helloworld-repo
+- name: ((namespace))-repo
   type: git
   source:
     uri: ((repo-url))
@@ -48,7 +48,7 @@ jobs:
       - aggregate:
         - get: every-30m
           trigger: true
-        - get: vijay-veeranki-helloworld-repo
+        - get: ((namespace))-repo
           trigger: true
         - get: tools-image
       - task: apply-environments
@@ -56,7 +56,7 @@ jobs:
         config:
           platform: linux
           inputs:
-            - name: vijay-veeranki-helloworld-repo
+            - name: ((namespace))-repo
           params:
             KUBECONFIG_AWS_ACCESS_KEY_ID: ((aws-pk-test-9.access-key-id))
             KUBECONFIG_AWS_SECRET_ACCESS_KEY: ((aws-pk-test-9.secret-access-key))
