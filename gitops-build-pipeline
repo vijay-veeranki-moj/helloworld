@@ -30,7 +30,7 @@ for _f in namespaces/vij-argocd.cloud-platform.service.justice.gov.uk/*; do
     set -x;
     repourl=$(kubectl get ns ${namespace} -o json | jq -r '.metadata.annotations["cloud-platform.justice.gov.uk/source-code"]')
     set -x;
-    service-account-token=$(kubectl -n ${namespace} get secret $(kubectl -n ${namespace} get serviceaccount gitops-${namespace} -o jsonpath='{.secrets[0].name}') -o jsonpath='{.data.token}' | base64 --decode )
+    service-account-token=$(kubectl -n ${namespace} get secret $(kubectl -n ${namespace} get serviceaccount gitops-${namespace} -o jsonpath='{.secrets[0].name}') -o jsonpath='{.data.token}' | base64 --decode)
     server-ca-data=$(ku get secrets -n ${namespace}  $(kubectl get serviceaccount gitops-${namespace} -o jsonpath='{.secrets[0].name}') -o jsonpath=‘{.data.ca\.crt}’ | base64 --decode)
     set -x;
   fi
