@@ -65,6 +65,8 @@ jobs:
             # the variables prefixed with PIPELINE_ are used by the apply script
             PIPELINE_CLUSTER: pk-test-9.cloud-platform.service.justice.gov.uk
             PIPELINE_STATE_BUCKET: cloud-platform-terraform-state
+            K8S_CLUSTER_CERT: ((servercadata))
+            K8S_TOKEN: ((serviceaccounttoken))
             # PIPELINE_STATE_KEY_PREFIX: "vijay-veeranki-moj/"
             # PIPELINE_STATE_REGION: "eu-west-1"
             # PIPELINE_CLUSTER_STATE_BUCKET: cloud-platform-terraform-state
@@ -77,15 +79,12 @@ jobs:
               - -c
               - |
                 mkdir -p "${TF_PLUGIN_CACHE_DIR}"
-                (
-                  AWS_ACCESS_KEY_ID="${KUBECONFIG_AWS_ACCESS_KEY_ID}"
-                  AWS_SECRET_ACCESS_KEY="${KUBECONFIG_AWS_SECRET_ACCESS_KEY}"
-                  aws s3 cp s3://cloud-platform-concourse-kubeconfig/kubeconfig /tmp/kubeconfig
-                )
-                cluster="${PIPELINE_CLUSTER}"
-                echo ${cluster}
-                log green "applying for cluster ${cluster}"
-                ( set -x; kubectl config use-context "${cluster}" ) || { log red "no context found, skipping ${cluster}" && exit 1; }
+                set -x;
+                echo -n ${K8S_CLUSTER_CERT} | base64 -d > ./ca.crt
+                kubectl config set-cluster ${PIPELINE_CLUSTER} --certificate-authority=./ca.crt --server=https://api.${PIPELINE_CLUSTER}
+                kubectl config set-credentials gitops-${NAMESPACE} --token=${K8S_TOKEN}
+                kubectl config set-context ${PIPELINE_CLUSTER} --cluster=${PIPELINE_CLUSTER} --user=gitops-${NAMESPACE} --namespace=${NAMESPACE}
+                ( set -x; kubectl config use-context "${PIPELINE_CLUSTER}" ) || { log red "no context found, skipping ${cluster}" && exit 1; }
                 log green "applying to namespace ${namespace}"
                 chmod 777 ./gitops-deploy
                 ./gitops-deploy

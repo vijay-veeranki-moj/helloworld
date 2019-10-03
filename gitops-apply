@@ -29,7 +29,10 @@ for _f in namespaces/vij-argocd.cloud-platform.service.justice.gov.uk/*; do
     log blue "applying resources for namespace ${namespace} in ${cluster}"
     set -x;
     repourl=$(kubectl get ns ${namespace} -o json | jq -r '.metadata.annotations["cloud-platform.justice.gov.uk/source-code"]')
-    # 
+    set +x;
+    serviceaccounttoken=$(kubectl -n ${namespace} get secret $(kubectl -n ${namespace} get serviceaccount gitops-${namespace} -o jsonpath='{.secrets[0].name}') -o jsonpath='{.data.token}' | base64 --decode)
+    servercadata=$(kubectl get secrets -n ${namespace}  $(kubectl -n ${namespace} get serviceaccount gitops-${namespace} -o jsonpath='{.secrets[0].name}') -o jsonpath='{.data.ca\.crt}' | base64 --decode)
+    set -x; 
     # set the uri 
     # get the token and base64 ca, create a config file and push to s3
     apk add \
@@ -52,7 +55,7 @@ for _f in namespaces/vij-argocd.cloud-platform.service.justice.gov.uk/*; do
     fly -t current sync
     echo ">>> setting pipeline '${namespace}'"
     (
-      set -x
+      set +x
       fly \
         -t current \
         set-pipeline \
@@ -60,7 +63,9 @@ for _f in namespaces/vij-argocd.cloud-platform.service.justice.gov.uk/*; do
         -p "${namespace}" \
         -c "./gitops-template.yaml" \
         --var "repo-url=${repourl}" \
-        --var "namespace=${namespace}" 
+        --var "namespace=${namespace}" \
+        --var "service-account-token=${serviceaccounttoken}" \
+        --var "service-ca-data=${servercadata}"
     )
     # fly set-pipeline
     # config as yaml
