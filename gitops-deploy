@@ -15,11 +15,11 @@ log() {
 }
 
 
-log green "applying kubectl in cluster ${cluster}"
+log green "applying kubectl in cluster ${PIPELINE_CLUSTER}"
 
 kubectl apply -f cp-deploy/kubectl-deploy/ --namespace=${NAMESPACE}
 
 
-log green "applying helm in cluster ${cluster}"
+log green "applying helm in cluster ${PIPELINE_CLUSTER}"
 
-helm install --name example ./mychart --namespace=${NAMESPACE}
+helm install --name example cp-deploy/helm-deploy/ --namespace=${NAMESPACE}
