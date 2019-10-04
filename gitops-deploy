@@ -20,6 +20,12 @@ log green "applying kubectl in cluster ${PIPELINE_CLUSTER}"
 kubectl apply -f cp-deploy/kubectl-deploy/ --namespace=${NAMESPACE}
 
 
-log green "applying helm in cluster ${PIPELINE_CLUSTER}"
+# log green "applying helm in cluster ${PIPELINE_CLUSTER}"
 
-helm install --name example cp-deploy/helm-deploy/ --namespace=${NAMESPACE}
+# helm install --name example cp-deploy/helm-deploy/ --namespace=live0-to-live1
+
+# helm install cp-deploy/helm-deploy/ \
+#       --tiller-namespace ${NAMESPACE} \
+#       --namespace ${NAMESPACE}
+
+
