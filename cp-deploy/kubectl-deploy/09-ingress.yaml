@@ -8,10 +8,10 @@ metadata:
 spec:
   tls:
   - hosts:
-    - gitops-rubyapp5.apps.pk-test-9.cloud-platform.service.justice.gov.uk
+    - spin-test.apps.spinnaker.cloud-platform.service.justice.gov.uk
     secretName: live0-to-live1-cert
   rules:
-  - host: gitops-rubyapp5.apps.pk-test-9.cloud-platform.service.justice.gov.uk
+  - host: spin-test.apps.spinnaker.cloud-platform.service.justice.gov.uk
     http:
       paths:
       - path: /
