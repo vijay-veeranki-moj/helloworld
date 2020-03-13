@@ -3,7 +3,7 @@ apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   name: integration-test-helloworld
-  namespace: vv-test-3
+  namespace: vv-test-4
 spec:
   replicas: 1
   template:
@@ -21,7 +21,7 @@ kind: Service
 apiVersion: v1
 metadata:
   name: integration-test-svc
-  namespace: vv-test-3
+  namespace: vv-test-4
   labels:
     app: integration-test-svc
 spec:
@@ -36,14 +36,14 @@ apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   name: integration-test-app-ing
-  namespace: vv-test-3
+  namespace: vv-test-4
 spec:
   tls:
   - hosts:
-    - vv-test-3.apps.spinnaker.cloud-platform.service.justice.gov.uk
+    - vv-test-4.apps.spinnaker.cloud-platform.service.justice.gov.uk
     secretName: hello-world-ssl
   rules:
-  - host: vv-test-3-spinnaker.apps.spinnaker.cloud-platform.service.justice.gov.uk
+  - host: vv-test-4-spinnaker.apps.spinnaker.cloud-platform.service.justice.gov.uk
     http:
       paths:
       - path: /
