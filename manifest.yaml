@@ -50,4 +50,3 @@ spec:
         backend:
           serviceName: integration-test-svc
           servicePort: 80
-
